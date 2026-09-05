@@ -1,1 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jet Simulator - Launching Soon</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Canvas Confetti Library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #0b0f19;
+      color: #f3f4f6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Temporary Test Control */
+    .test-btn {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px dashed #ef4444;
+      color: #fca5a5;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: all 0.2s ease;
+    }
+
+    .test-btn:hover {
+      background: rgba(239, 68, 68, 0.4);
+      color: #ffffff;
+      transform: translateX(-50%) scale(1.05);
+    }
+
+    /* Ambient Background */
+    .bg-wrapper {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .bg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.25;
+      filter: saturate(1.2);
+      animation: pulseGlow 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulseGlow {
+      0% { transform: scale(1); opacity: 0.2; }
+      100% { transform: scale(1.05); opacity: 0.3; }
+    }
+
+    .bg-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(11, 15, 25, 0.4) 0%, #0b0f19 90%);
+    }
+
+    /* Main Glassmorphic Container */
+    .container {
+      position: relative;
+      z-index: 2;
+      max-width: 680px;
+      width: 100%;
+      text-align: center;
+      background: rgba(17, 24, 39, 0.55);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 48px 32px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      animation: fadeInUp 1s ease-out;
+      transition: all 0.5s ease;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Badge */
+    .badge {
+      display: inline-block;
+      padding: 6px 14px;
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: #60a5fa;
+      font-weight: 600;
+      font-size: 0.8rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      border-radius: 100px;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      background: linear-gradient(180deg, #ffffff 0%, #9ca3af 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 16px;
+    }
+
+    .desc {
+      color: #9ca3af;
+      font-size: 1rem;
+      line-height: 1.6;
+      max-width: 520px;
+      margin: 0 auto 36px;
+    }
+
+    /* Countdown Grid */
+    .timer {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 40px;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 16px;
+      padding: 16px 8px;
+      transition: transform 0.2s ease;
+    }
+
+    .box:hover {
+      transform: translateY(-3px);
+    }
+
+    .box .num {
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      font-weight: 700;
+      color: #38bdf8;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+
+    .box .lbl {
+      font-size: 0.7rem;
+      color: #6b7280;
+      margin-top: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    /* Action Buttons */
+    .actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      flex: 1;
+      min-width: 160px;
+    }
+
+    .btn.roblox {
+      background: #ffffff;
+      color: #0f172a;
+      box-shadow: 0 4px 14px rgba(255, 255, 255, 0.15);
+    }
+
+    .btn.roblox:hover {
+      background: #f1f5f9;
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+    }
+
+    .btn.discord {
+      background: #5865F2;
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(88, 101, 242, 0.25);
+    }
+
+    .btn.discord:hover {
+      background: #4752C4;
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 6px 20px rgba(88, 101, 242, 0.4);
+    }
+
+    /* Floating Rocket Animation Container */
+    .rocket-container {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 10;
+      overflow: hidden;
+    }
+
+    .rocket {
+      position: absolute;
+      bottom: -150px;
+      font-size: 4rem;
+      filter: drop-shadow(0 10px 15px rgba(239, 68, 68, 0.5));
+      animation: launchRocket 3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+
+    @keyframes launchRocket {
+      0% {
+        transform: translateY(0) scale(0.8) rotate(-10deg);
+        opacity: 1;
+      }
+      50% {
+        transform: translateY(-60vh) scale(1.2) rotate(5deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-130vh) scale(1.5) rotate(0deg);
+        opacity: 0;
+      }
+    }
+
+    /* Live Game Released State */
+    .container.is-released {
+      border-color: rgba(34, 197, 94, 0.4);
+      box-shadow: 0 20px 60px rgba(34, 197, 94, 0.2);
+    }
+
+    .container.is-released .badge {
+      background: rgba(34, 197, 94, 0.15);
+      border-color: rgba(34, 197, 94, 0.4);
+      color: #4ade80;
+      animation: pulseBadge 1.5s infinite alternate;
+    }
+
+    @keyframes pulseBadge {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.05); }
+    }
+
+    .btn.play-now {
+      background: #22c55e;
+      color: #ffffff;
+      font-size: 1.1rem;
+      padding: 16px 36px;
+      box-shadow: 0 4px 20px rgba(34, 197, 94, 0.4);
+      animation: bounce 2s infinite;
+    }
+
+    .btn.play-now:hover {
+      background: #16a34a;
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 25px rgba(34, 197, 94, 0.6);
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-8px); }
+      60% { transform: translateY(-4px); }
+    }
+
+    @media (max-width: 480px) {
+      .container { padding: 32px 20px; }
+      .actions { flex-direction: column; }
+      .btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Temporary Testing Button -->
+  <button class="test-btn" onclick="startTestCountdown()">🧪 Test 15s Countdown</button>
+
+  <div class="bg-wrapper">
+    <img class="bg" src="jetsim.png" alt="Jet Simulator Background">
+    <div class="bg-overlay"></div>
+  </div>
+
+  <div class="rocket-container" id="rocketContainer"></div>
+
+  <main class="container" id="mainContainer">
+    <span class="badge" id="badge">Official Launch</span>
+    <h1 id="title">Jet Simulator</h1>
+    
+    <p class="desc" id="desc">
+      Equip high-speed jets, complete quests, hatch pets, and discover new islands! Launch day is approaching — prepare for takeoff.
+    </p>
+
+    <div class="timer" id="timer">
+      <div class="box"><div class="num" id="d">00</div><div class="lbl">Days</div></div>
+      <div class="box"><div class="num" id="h">00</div><div class="lbl">Hours</div></div>
+      <div class="box"><div class="num" id="m">00</div><div class="lbl">Minutes</div></div>
+      <div class="box"><div class="num" id="s">00</div><div class="lbl">Seconds</div></div>
+    </div>
+
+    <div class="actions" id="actions">
+      <a class="btn roblox" id="robloxBtn" href="https://www.roblox.com/games/115008936782309" target="_blank" rel="noopener">Play on Roblox</a>
+      <a class="btn discord" href="https://discord.gg/m7YgPFh5J" target="_blank" rel="noopener">Join Discord</a>
+    </div>
+  </main>
+
+  <script>
+    // Primary Release Date
+    let releaseDate = new Date("2026-09-12T16:00:00Z");
+    let isLaunched = false;
+
+    // Helper for formatting single digits
+    function padZero(num) {
+      return num.toString().padStart(2, '0');
+    }
+
+    // Function triggered by the temporary test button
+    function startTestCountdown() {
+      isLaunched = false;
+      releaseDate = new Date(Date.now() + 15000); // Set target to 15 seconds from now
+      
+      // Reset UI back to countdown state if previously launched
+      document.getElementById('mainContainer').classList.remove('is-released');
+      document.getElementById('badge').textContent = 'Official Launch';
+      document.getElementById('title').textContent = 'Jet Simulator';
+      document.getElementById('desc').textContent = 'Equip high-speed jets, complete quests, hatch pets, and discover new islands! Launch day is approaching — prepare for takeoff.';
+      
+      const timerEl = document.getElementById('timer');
+      timerEl.style.display = 'grid';
+
+      const robloxBtn = document.getElementById('robloxBtn');
+      robloxBtn.textContent = 'Play on Roblox';
+      robloxBtn.className = 'btn roblox';
+    }
+
+    function spawnRockets() {
+      const container = document.getElementById('rocketContainer');
+      const positions = [15, 35, 65, 85];
+      
+      positions.forEach((pos, index) => {
+        setTimeout(() => {
+          const rocket = document.createElement('div');
+          rocket.className = 'rocket';
+          rocket.innerHTML = '🚀';
+          rocket.style.left = `${pos}%`;
+          container.appendChild(rocket);
+
+          setTimeout(() => rocket.remove(), 3000);
+        }, index * 400);
+      });
+    }
+
+    function triggerConfetti() {
+      const duration = 5 * 1000;
+      const animationEnd = Date.now() + duration;
+      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 100 };
+
+      function randomInRange(min, max) {
+        return Math.random() * (max - min) + min;
+      }
+
+      const interval = setInterval(function() {
+        const timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+          return clearInterval(interval);
+        }
+
+        const particleCount = 50 * (timeLeft / duration);
+        confetti(Object.assign({}, defaults, { 
+          particleCount, 
+          origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } 
+        }));
+        confetti(Object.assign({}, defaults, { 
+          particleCount, 
+          origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } 
+        }));
+      }, 250);
+    }
+
+    function onRelease() {
+      if (isLaunched) return;
+      isLaunched = true;
+
+      // Update UI Elements
+      document.getElementById('mainContainer').classList.add('is-released');
+      document.getElementById('badge').textContent = 'NOW LIVE!';
+      document.getElementById('title').textContent = '🚀 Jet Simulator Is Out!';
+      document.getElementById('desc').textContent = 'The wait is over! Jump into the cockpit, fly across islands, hatch rare pets, and play now!';
+      
+      // Hide Timer
+      const timerEl = document.getElementById('timer');
+      timerEl.style.display = 'none';
+
+      // Upgrade Roblox Button
+      const robloxBtn = document.getElementById('robloxBtn');
+      robloxBtn.textContent = '🔥 PLAY NOW ON ROBLOX';
+      robloxBtn.className = 'btn play-now';
+
+      // Trigger Effects
+      spawnRockets();
+      triggerConfetti();
+    }
+
+    function tick() {
+      const now = new Date();
+      let diff = Math.max(0, releaseDate - now);
+
+      if (diff <= 0) {
+        onRelease();
+        return;
+      }
+
+      const d = Math.floor(diff / 86400000); diff %= 86400000;
+      const h = Math.floor(diff / 3600000);  diff %= 3600000;
+      const m = Math.floor(diff / 60000);    diff %= 60000;
+      const s = Math.floor(diff / 1000);
+
+      document.getElementById("d").textContent = padZero(d);
+      document.getElementById("h").textContent = padZero(h);
+      document.getElementById("m").textContent = padZero(m);
+      document.getElementById("s").textContent = padZero(s);
+    }
+
+    tick();
+    setInterval(tick, 1000);
+  </script>
+</body>
+</html>
