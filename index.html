@@ -201,9 +201,14 @@
     }
 
     .btn-icon {
-      width: 20px;
-      height: 20px;
+      width: 22px;
+      height: 22px;
       object-fit: contain;
+    }
+
+    .btn-icon.discord-icon {
+      width: 28px;
+      height: 28px;
     }
 
     .btn.roblox {
@@ -240,24 +245,20 @@
 
     .rocket {
       position: absolute;
-      width: 75px;
+      width: 80px;
       height: auto;
       filter: drop-shadow(-10px 10px 20px rgba(239, 68, 68, 0.6));
-      animation: launchTopRight 3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+      animation: launchFlyThrough 2.2s linear forwards;
     }
 
-    @keyframes launchTopRight {
+    @keyframes launchFlyThrough {
       0% {
-        transform: translate(0, 0) rotate(45deg) scale(0.6);
-        opacity: 1;
-      }
-      50% {
-        transform: translate(45vw, -60vh) rotate(45deg) scale(1.1);
+        transform: translate(0, 0) rotate(45deg) scale(0.7);
         opacity: 1;
       }
       100% {
-        transform: translate(90vw, -130vh) rotate(45deg) scale(1.4);
-        opacity: 0;
+        transform: translate(140vw, -140vh) rotate(45deg) scale(1.3);
+        opacity: 1;
       }
     }
 
@@ -338,7 +339,7 @@
         <span>Play on Roblox</span>
       </a>
       <a class="btn discord" href="https://discord.gg/m7YgPFh5J" target="_blank" rel="noopener">
-        <img class="btn-icon" src="Discord.png" alt="Discord">
+        <img class="btn-icon discord-icon" src="Discord.png" alt="Discord">
         <span>Join Discord</span>
       </a>
     </div>
@@ -349,7 +350,7 @@
     let isLaunched = false;
 
     const tickAudio = new Audio('launching.mp3');
-    const launchedAudio = new Audio('Success.mp3');
+    const launchedAudio = new Audio('launched.mp3');
 
     function padZero(num) {
       return num.toString().padStart(2, '0');
@@ -391,10 +392,10 @@
     function spawnRockets() {
       const container = document.getElementById('rocketContainer');
       const startPositions = [
-        { left: -50, bottom: 0 },
-        { left: 10, bottom: -50 },
-        { left: 30, bottom: -50 },
-        { left: 50, bottom: -50 }
+        { left: -20, bottom: -100 },
+        { left: 0, bottom: -150 },
+        { left: 20, bottom: -150 },
+        { left: 40, bottom: -150 }
       ];
       
       startPositions.forEach((pos, index) => {
@@ -407,8 +408,8 @@
           rocket.style.bottom = `${pos.bottom}px`;
           container.appendChild(rocket);
 
-          setTimeout(() => rocket.remove(), 3000);
-        }, index * 350);
+          setTimeout(() => rocket.remove(), 2300);
+        }, index * 300);
       });
     }
 
