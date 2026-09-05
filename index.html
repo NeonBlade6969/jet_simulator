@@ -9,7 +9,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
   
-  <!-- Canvas Confetti Library -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
@@ -33,7 +32,6 @@
       overflow: hidden;
     }
 
-    /* Temporary Test Control */
     .test-btn {
       position: fixed;
       top: 16px;
@@ -58,7 +56,6 @@
       transform: translateX(-50%) scale(1.05);
     }
 
-    /* Ambient Background Image */
     .bg-wrapper {
       position: fixed;
       inset: 0;
@@ -85,7 +82,6 @@
       background: radial-gradient(circle at center, rgba(11, 15, 25, 0.3) 0%, #0b0f19 90%);
     }
 
-    /* Main Glass Container */
     .container {
       position: relative;
       z-index: 2;
@@ -108,7 +104,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Badge */
     .badge {
       display: inline-block;
       padding: 6px 16px;
@@ -143,7 +138,6 @@
       margin: 0 auto 36px;
     }
 
-    /* Countdown Grid */
     .timer {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -183,7 +177,6 @@
       font-weight: 600;
     }
 
-    /* Action Buttons with Icons */
     .actions {
       display: flex;
       gap: 12px;
@@ -237,7 +230,6 @@
       box-shadow: 0 8px 25px rgba(88, 101, 242, 0.45);
     }
 
-    /* Rocket Launch Animation Engine */
     .rocket-container {
       position: fixed;
       inset: 0;
@@ -248,29 +240,27 @@
 
     .rocket {
       position: absolute;
-      bottom: -180px;
-      width: 70px;
+      width: 75px;
       height: auto;
-      filter: drop-shadow(0 10px 20px rgba(239, 68, 68, 0.6));
-      animation: launchRocket 3.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+      filter: drop-shadow(-10px 10px 20px rgba(239, 68, 68, 0.6));
+      animation: launchTopRight 3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
     }
 
-    @keyframes launchRocket {
+    @keyframes launchTopRight {
       0% {
-        transform: translateY(0) scale(0.7) rotate(-5deg);
+        transform: translate(0, 0) rotate(45deg) scale(0.6);
         opacity: 1;
       }
       50% {
-        transform: translateY(-60vh) scale(1.1) rotate(3deg);
+        transform: translate(45vw, -60vh) rotate(45deg) scale(1.1);
         opacity: 1;
       }
       100% {
-        transform: translateY(-130vh) scale(1.4) rotate(0deg);
+        transform: translate(90vw, -130vh) rotate(45deg) scale(1.4);
         opacity: 0;
       }
     }
 
-    /* Released Active State Styles */
     .container.is-released {
       border-color: rgba(34, 197, 94, 0.5);
       box-shadow: 0 20px 60px rgba(34, 197, 94, 0.25), inset 0 1px 0 rgba(34, 197, 94, 0.3);
@@ -318,7 +308,6 @@
 </head>
 <body>
 
-  <!-- Test Button -->
   <button class="test-btn" onclick="startTestCountdown()">🧪 Test 15s Launch</button>
 
   <div class="bg-wrapper">
@@ -359,26 +348,32 @@
     let releaseDate = new Date("2026-09-12T16:00:00Z");
     let isLaunched = false;
 
-    // Load Countdown Sound Effect
     const tickAudio = new Audio('launching.mp3');
+    const launchedAudio = new Audio('Success.mp3');
 
     function padZero(num) {
       return num.toString().padStart(2, '0');
     }
 
     function playTickSound() {
-      // Clone audio node to allow rapid playback per second without cutoff
-      const audioClone = tickAudio.cloneNode(true);
-      audioClone.play().catch(() => {
-        // Ignored if user hasn't interacted with page yet
-      });
+      const sound = tickAudio.cloneNode(true);
+      sound.currentTime = 0.2;
+      sound.play().then(() => {
+        setTimeout(() => {
+          sound.pause();
+        }, 400);
+      }).catch(() => {});
+    }
+
+    function playLaunchedSound() {
+      launchedAudio.currentTime = 0;
+      launchedAudio.play().catch(() => {});
     }
 
     function startTestCountdown() {
       isLaunched = false;
       releaseDate = new Date(Date.now() + 15000);
       
-      // Reset UI back to pre-launch state
       document.getElementById('mainContainer').classList.remove('is-released');
       document.getElementById('badge').textContent = 'Official Launch';
       document.getElementById('title').textContent = 'Jet Simulator';
@@ -395,18 +390,24 @@
 
     function spawnRockets() {
       const container = document.getElementById('rocketContainer');
-      const positions = [12, 35, 65, 88];
+      const startPositions = [
+        { left: -50, bottom: 0 },
+        { left: 10, bottom: -50 },
+        { left: 30, bottom: -50 },
+        { left: 50, bottom: -50 }
+      ];
       
-      positions.forEach((pos, index) => {
+      startPositions.forEach((pos, index) => {
         setTimeout(() => {
           const rocket = document.createElement('img');
           rocket.className = 'rocket';
           rocket.src = 'rocket.png';
           rocket.alt = 'Launching Rocket';
-          rocket.style.left = `${pos}%`;
+          rocket.style.left = `${pos.left}%`;
+          rocket.style.bottom = `${pos.bottom}px`;
           container.appendChild(rocket);
 
-          setTimeout(() => rocket.remove(), 3200);
+          setTimeout(() => rocket.remove(), 3000);
         }, index * 350);
       });
     }
@@ -443,22 +444,19 @@
       if (isLaunched) return;
       isLaunched = true;
 
-      // Update UI Elements
       document.getElementById('mainContainer').classList.add('is-released');
       document.getElementById('badge').textContent = 'NOW LIVE!';
       document.getElementById('title').textContent = 'Jet Simulator Is Out!';
-      document.getElementById('desc').textContent = 'The wait is over! Jump into the cockpit, fly across islands, hatch rare pets, and play now!';
+      document.getElementById('desc').textContent = 'Equip high-speed jets, fly across islands, hatch rare pets, complete quests, and dominate the skies! Play now!';
       
-      // Hide Timer
       document.getElementById('timer').style.display = 'none';
 
-      // Upgrade Roblox Button with play.png icon
       const robloxBtn = document.getElementById('robloxBtn');
       robloxBtn.className = 'btn play-now';
       robloxBtn.querySelector('span').textContent = 'PLAY NOW ON ROBLOX';
       document.getElementById('robloxIcon').src = 'play.png';
 
-      // Launch rocket image sequence & confetti
+      playLaunchedSound();
       spawnRockets();
       triggerConfetti();
     }
@@ -472,7 +470,6 @@
         return;
       }
 
-      // Play launching.mp3 every second while counting down
       playTickSound();
 
       const d = Math.floor(diff / 86400000); diff %= 86400000;
