@@ -34,30 +34,6 @@
       overflow: hidden;
     }
 
-    .test-btn {
-      position: fixed;
-      top: 16px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 100;
-      background: rgba(239, 68, 68, 0.25);
-      border: 1px dashed #ef4444;
-      color: #fca5a5;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      backdrop-filter: blur(8px);
-      transition: all 0.2s ease;
-    }
-
-    .test-btn:hover {
-      background: rgba(239, 68, 68, 0.45);
-      color: #ffffff;
-      transform: translateX(-50%) scale(1.05);
-    }
-
     .bg-wrapper {
       position: fixed;
       inset: 0;
@@ -311,8 +287,6 @@
 </head>
 <body>
 
-  <button class="test-btn" onclick="startTestCountdown()">🧪 Test 15s Launch</button>
-
   <div class="bg-wrapper">
     <img class="bg" src="jetsim.png" alt="Jet Simulator Background">
     <div class="bg-overlay"></div>
@@ -371,25 +345,6 @@
     function playLaunchedSound() {
       launchedAudio.currentTime = 0;
       launchedAudio.play().catch(() => {});
-    }
-
-    function startTestCountdown() {
-      isLaunched = false;
-      releaseDate = new Date(Date.now() + 15000);
-      
-      document.getElementById('docTitle').textContent = 'Jet Simulator - Launching Soon';
-      document.getElementById('mainContainer').classList.remove('is-released');
-      document.getElementById('badge').textContent = 'Official Launch';
-      document.getElementById('title').textContent = 'Jet Simulator';
-      document.getElementById('desc').textContent = 'Equip high-speed jets, complete quests, hatch pets, and discover new islands! Launch day is approaching — prepare for takeoff.';
-      
-      const timerEl = document.getElementById('timer');
-      timerEl.style.display = 'grid';
-
-      const robloxBtn = document.getElementById('robloxBtn');
-      robloxBtn.className = 'btn roblox';
-      robloxBtn.querySelector('span').textContent = 'Play on Roblox';
-      document.getElementById('robloxIcon').src = 'roblox.png';
     }
 
     function spawnRockets() {
