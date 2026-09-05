@@ -40,7 +40,7 @@
       left: 50%;
       transform: translateX(-50%);
       z-index: 100;
-      background: rgba(239, 68, 68, 0.2);
+      background: rgba(239, 68, 68, 0.25);
       border: 1px dashed #ef4444;
       color: #fca5a5;
       padding: 8px 16px;
@@ -53,12 +53,12 @@
     }
 
     .test-btn:hover {
-      background: rgba(239, 68, 68, 0.4);
+      background: rgba(239, 68, 68, 0.45);
       color: #ffffff;
       transform: translateX(-50%) scale(1.05);
     }
 
-    /* Ambient Background */
+    /* Ambient Background Image */
     .bg-wrapper {
       position: fixed;
       inset: 0;
@@ -69,38 +69,38 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      opacity: 0.25;
+      opacity: 0.28;
       filter: saturate(1.2);
       animation: pulseGlow 8s ease-in-out infinite alternate;
     }
 
     @keyframes pulseGlow {
-      0% { transform: scale(1); opacity: 0.2; }
-      100% { transform: scale(1.05); opacity: 0.3; }
+      0% { transform: scale(1); opacity: 0.22; }
+      100% { transform: scale(1.05); opacity: 0.32; }
     }
 
     .bg-overlay {
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at center, rgba(11, 15, 25, 0.4) 0%, #0b0f19 90%);
+      background: radial-gradient(circle at center, rgba(11, 15, 25, 0.3) 0%, #0b0f19 90%);
     }
 
-    /* Main Glassmorphic Container */
+    /* Main Glass Container */
     .container {
       position: relative;
       z-index: 2;
       max-width: 680px;
       width: 100%;
       text-align: center;
-      background: rgba(17, 24, 39, 0.55);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(17, 24, 39, 0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 24px;
       padding: 48px 32px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
       animation: fadeInUp 1s ease-out;
-      transition: all 0.5s ease;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     @keyframes fadeInUp {
@@ -111,11 +111,11 @@
     /* Badge */
     .badge {
       display: inline-block;
-      padding: 6px 14px;
+      padding: 6px 16px;
       background: rgba(59, 130, 246, 0.15);
-      border: 1px solid rgba(59, 130, 246, 0.3);
+      border: 1px solid rgba(59, 130, 246, 0.35);
       color: #60a5fa;
-      font-weight: 600;
+      font-weight: 700;
       font-size: 0.8rem;
       letter-spacing: 1.5px;
       text-transform: uppercase;
@@ -129,7 +129,7 @@
       font-weight: 800;
       letter-spacing: -0.02em;
       line-height: 1.1;
-      background: linear-gradient(180deg, #ffffff 0%, #9ca3af 100%);
+      background: linear-gradient(180deg, #ffffff 0%, #a1a1aa 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       margin-bottom: 16px;
@@ -154,14 +154,15 @@
 
     .box {
       background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.07);
       border-radius: 16px;
       padding: 16px 8px;
-      transition: transform 0.2s ease;
+      transition: transform 0.2s ease, border-color 0.2s ease;
     }
 
     .box:hover {
       transform: translateY(-3px);
+      border-color: rgba(56, 189, 248, 0.3);
     }
 
     .box .num {
@@ -170,6 +171,7 @@
       color: #38bdf8;
       font-variant-numeric: tabular-nums;
       line-height: 1;
+      text-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
     }
 
     .box .lbl {
@@ -181,7 +183,7 @@
       font-weight: 600;
     }
 
-    /* Action Buttons */
+    /* Action Buttons with Icons */
     .actions {
       display: flex;
       gap: 12px;
@@ -193,15 +195,22 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      gap: 10px;
       padding: 14px 28px;
       border-radius: 12px;
       font-size: 0.95rem;
-      font-weight: 600;
+      font-weight: 700;
       text-decoration: none;
       transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       cursor: pointer;
       flex: 1;
-      min-width: 160px;
+      min-width: 170px;
+    }
+
+    .btn-icon {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
     }
 
     .btn.roblox {
@@ -213,7 +222,7 @@
     .btn.roblox:hover {
       background: #f1f5f9;
       transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+      box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
     }
 
     .btn.discord {
@@ -225,10 +234,10 @@
     .btn.discord:hover {
       background: #4752C4;
       transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 6px 20px rgba(88, 101, 242, 0.4);
+      box-shadow: 0 8px 25px rgba(88, 101, 242, 0.45);
     }
 
-    /* Floating Rocket Animation Container */
+    /* Rocket Launch Animation Engine */
     .rocket-container {
       position: fixed;
       inset: 0;
@@ -239,31 +248,32 @@
 
     .rocket {
       position: absolute;
-      bottom: -150px;
-      font-size: 4rem;
-      filter: drop-shadow(0 10px 15px rgba(239, 68, 68, 0.5));
-      animation: launchRocket 3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+      bottom: -180px;
+      width: 70px;
+      height: auto;
+      filter: drop-shadow(0 10px 20px rgba(239, 68, 68, 0.6));
+      animation: launchRocket 3.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
     }
 
     @keyframes launchRocket {
       0% {
-        transform: translateY(0) scale(0.8) rotate(-10deg);
+        transform: translateY(0) scale(0.7) rotate(-5deg);
         opacity: 1;
       }
       50% {
-        transform: translateY(-60vh) scale(1.2) rotate(5deg);
+        transform: translateY(-60vh) scale(1.1) rotate(3deg);
         opacity: 1;
       }
       100% {
-        transform: translateY(-130vh) scale(1.5) rotate(0deg);
+        transform: translateY(-130vh) scale(1.4) rotate(0deg);
         opacity: 0;
       }
     }
 
-    /* Live Game Released State */
+    /* Released Active State Styles */
     .container.is-released {
-      border-color: rgba(34, 197, 94, 0.4);
-      box-shadow: 0 20px 60px rgba(34, 197, 94, 0.2);
+      border-color: rgba(34, 197, 94, 0.5);
+      box-shadow: 0 20px 60px rgba(34, 197, 94, 0.25), inset 0 1px 0 rgba(34, 197, 94, 0.3);
     }
 
     .container.is-released .badge {
@@ -283,14 +293,14 @@
       color: #ffffff;
       font-size: 1.1rem;
       padding: 16px 36px;
-      box-shadow: 0 4px 20px rgba(34, 197, 94, 0.4);
+      box-shadow: 0 6px 25px rgba(34, 197, 94, 0.45);
       animation: bounce 2s infinite;
     }
 
     .btn.play-now:hover {
       background: #16a34a;
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 8px 25px rgba(34, 197, 94, 0.6);
+      transform: translateY(-3px) scale(1.04);
+      box-shadow: 0 10px 30px rgba(34, 197, 94, 0.65);
     }
 
     @keyframes bounce {
@@ -308,8 +318,8 @@
 </head>
 <body>
 
-  <!-- Temporary Testing Button -->
-  <button class="test-btn" onclick="startTestCountdown()">🧪 Test 15s Countdown</button>
+  <!-- Test Button -->
+  <button class="test-btn" onclick="startTestCountdown()">🧪 Test 15s Launch</button>
 
   <div class="bg-wrapper">
     <img class="bg" src="jetsim.png" alt="Jet Simulator Background">
@@ -334,27 +344,41 @@
     </div>
 
     <div class="actions" id="actions">
-      <a class="btn roblox" id="robloxBtn" href="https://www.roblox.com/games/115008936782309" target="_blank" rel="noopener">Play on Roblox</a>
-      <a class="btn discord" href="https://discord.gg/m7YgPFh5J" target="_blank" rel="noopener">Join Discord</a>
+      <a class="btn roblox" id="robloxBtn" href="https://www.roblox.com/games/115008936782309" target="_blank" rel="noopener">
+        <img class="btn-icon" id="robloxIcon" src="roblox.png" alt="Roblox">
+        <span>Play on Roblox</span>
+      </a>
+      <a class="btn discord" href="https://discord.gg/m7YgPFh5J" target="_blank" rel="noopener">
+        <img class="btn-icon" src="Discord.png" alt="Discord">
+        <span>Join Discord</span>
+      </a>
     </div>
   </main>
 
   <script>
-    // Primary Release Date
     let releaseDate = new Date("2026-09-12T16:00:00Z");
     let isLaunched = false;
 
-    // Helper for formatting single digits
+    // Load Countdown Sound Effect
+    const tickAudio = new Audio('launching.mp3');
+
     function padZero(num) {
       return num.toString().padStart(2, '0');
     }
 
-    // Function triggered by the temporary test button
+    function playTickSound() {
+      // Clone audio node to allow rapid playback per second without cutoff
+      const audioClone = tickAudio.cloneNode(true);
+      audioClone.play().catch(() => {
+        // Ignored if user hasn't interacted with page yet
+      });
+    }
+
     function startTestCountdown() {
       isLaunched = false;
-      releaseDate = new Date(Date.now() + 15000); // Set target to 15 seconds from now
+      releaseDate = new Date(Date.now() + 15000);
       
-      // Reset UI back to countdown state if previously launched
+      // Reset UI back to pre-launch state
       document.getElementById('mainContainer').classList.remove('is-released');
       document.getElementById('badge').textContent = 'Official Launch';
       document.getElementById('title').textContent = 'Jet Simulator';
@@ -364,31 +388,33 @@
       timerEl.style.display = 'grid';
 
       const robloxBtn = document.getElementById('robloxBtn');
-      robloxBtn.textContent = 'Play on Roblox';
       robloxBtn.className = 'btn roblox';
+      robloxBtn.querySelector('span').textContent = 'Play on Roblox';
+      document.getElementById('robloxIcon').src = 'roblox.png';
     }
 
     function spawnRockets() {
       const container = document.getElementById('rocketContainer');
-      const positions = [15, 35, 65, 85];
+      const positions = [12, 35, 65, 88];
       
       positions.forEach((pos, index) => {
         setTimeout(() => {
-          const rocket = document.createElement('div');
+          const rocket = document.createElement('img');
           rocket.className = 'rocket';
-          rocket.innerHTML = '🚀';
+          rocket.src = 'rocket.png';
+          rocket.alt = 'Launching Rocket';
           rocket.style.left = `${pos}%`;
           container.appendChild(rocket);
 
-          setTimeout(() => rocket.remove(), 3000);
-        }, index * 400);
+          setTimeout(() => rocket.remove(), 3200);
+        }, index * 350);
       });
     }
 
     function triggerConfetti() {
       const duration = 5 * 1000;
       const animationEnd = Date.now() + duration;
-      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 100 };
+      const defaults = { startVelocity: 35, spread: 360, ticks: 70, zIndex: 100 };
 
       function randomInRange(min, max) {
         return Math.random() * (max - min) + min;
@@ -420,19 +446,19 @@
       // Update UI Elements
       document.getElementById('mainContainer').classList.add('is-released');
       document.getElementById('badge').textContent = 'NOW LIVE!';
-      document.getElementById('title').textContent = '🚀 Jet Simulator Is Out!';
+      document.getElementById('title').textContent = 'Jet Simulator Is Out!';
       document.getElementById('desc').textContent = 'The wait is over! Jump into the cockpit, fly across islands, hatch rare pets, and play now!';
       
       // Hide Timer
-      const timerEl = document.getElementById('timer');
-      timerEl.style.display = 'none';
+      document.getElementById('timer').style.display = 'none';
 
-      // Upgrade Roblox Button
+      // Upgrade Roblox Button with play.png icon
       const robloxBtn = document.getElementById('robloxBtn');
-      robloxBtn.textContent = '🔥 PLAY NOW ON ROBLOX';
       robloxBtn.className = 'btn play-now';
+      robloxBtn.querySelector('span').textContent = 'PLAY NOW ON ROBLOX';
+      document.getElementById('robloxIcon').src = 'play.png';
 
-      // Trigger Effects
+      // Launch rocket image sequence & confetti
       spawnRockets();
       triggerConfetti();
     }
@@ -445,6 +471,9 @@
         onRelease();
         return;
       }
+
+      // Play launching.mp3 every second while counting down
+      playTickSound();
 
       const d = Math.floor(diff / 86400000); diff %= 86400000;
       const h = Math.floor(diff / 3600000);  diff %= 3600000;
